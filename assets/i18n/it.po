@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: ZapFast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/zapfast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-10 17:58-0300\n"
+"POT-Creation-Date: 2026-10-12 23:00-0300\n"
 "PO-Revision-Date: 2026-09-22 00:00-0300\n"
 "Last-Translator: ZapFast contributors\n"
 "Language-Team: Italian\n"
@@ -179,7 +179,7 @@ msgstr "Bloccati"
 msgid "No favorites yet"
 msgstr "Ancora nessun preferito"
 
-#: src/ui/chats.rs:939 src/app.rs:2072
+#: src/ui/chats.rs:939 src/app.rs:2079
 msgid "Message yourself"
 msgstr "Invia un messaggio a te stesso"
 
@@ -295,7 +295,7 @@ msgid_plural "{} unread messages"
 msgstr[0] "{} messaggio non letto"
 msgstr[1] "{} messaggi non letti"
 
-#: src/ui/conversation.rs:2238 src/app.rs:2054 src/app.rs:2073
+#: src/ui/conversation.rs:2238 src/app.rs:2061 src/app.rs:2080
 msgid "You"
 msgstr "Tu"
 
@@ -432,27 +432,39 @@ msgstr "Riattiva audio"
 msgid "Mute"
 msgstr "Disattiva audio"
 
-#: src/ui/conversation.rs:7902 src/ui/conversation.rs:8223
+#: src/ui/conversation.rs:7902 src/ui/conversation.rs:8300
 msgid "Send as photo · Click to send as document"
 msgstr ""
 
-#: src/ui/conversation.rs:8190
+#: src/ui/conversation.rs:7958 src/ui/conversation.rs:8295
+msgid "Send as video · Click to send as document"
+msgstr ""
+
+#: src/ui/conversation.rs:8261
 msgid "Document"
 msgstr ""
 
-#: src/ui/conversation.rs:8232
+#: src/ui/conversation.rs:8311
+msgid "Send as document · Click to send as video"
+msgstr ""
+
+#: src/ui/conversation.rs:8316
 msgid "Send as document · Click to send as photo"
 msgstr ""
 
-#: src/ui/conversation.rs:8271
+#: src/ui/conversation.rs:8357
+msgid "Send as video"
+msgstr ""
+
+#: src/ui/conversation.rs:8359
 msgid "Send as photo"
 msgstr ""
 
-#: src/ui/conversation.rs:8272
+#: src/ui/conversation.rs:8361
 msgid "Send as document"
 msgstr ""
 
-#: src/ui/conversation.rs:8273 src/ui/dialogs.rs:1193
+#: src/ui/conversation.rs:8362 src/ui/dialogs.rs:1193
 msgid "Remove"
 msgstr "Rimuovi"
 
@@ -1154,29 +1166,29 @@ msgstr[1] "{} in attesa"
 msgid "No one yet"
 msgstr "Ancora nessuno"
 
-#: src/app.rs:1483
+#: src/app.rs:1490
 msgid "Could not delete the removed account's files"
 msgstr ""
 
-#: src/app.rs:1977
+#: src/app.rs:1984
 #, rust-format
 msgid "A label named “{name}” already exists."
 msgstr "Esiste già un’etichetta chiamata «{name}»."
 
-#: src/app.rs:2053
+#: src/app.rs:2060
 #, rust-format
 msgid "{name} (You)"
 msgstr "{name} (Tu)"
 
-#: src/app.rs:2976
+#: src/app.rs:2983
 msgid "Could not use this image"
 msgstr "Impossibile usare questa immagine"
 
-#: src/app.rs:3548
+#: src/app.rs:3555
 msgid "Not sent: ZapFast is not connected to WhatsApp."
 msgstr "Non inviato: ZapFast non è connesso a WhatsApp."
 
-#: src/app.rs:3552
+#: src/app.rs:3559
 msgid ""
 "Not sent: the message you’re replying to isn’t available on this computer. "
 "Cancel the reply to send without a quote."
@@ -1184,36 +1196,36 @@ msgstr ""
 "Non inviato: il messaggio a cui stai rispondendo non è disponibile su questo "
 "computer. Annulla la risposta per inviare senza citazione."
 
-#: src/app.rs:5391
+#: src/app.rs:5398
 msgid "Added to favorites"
 msgstr "Aggiunto ai preferiti"
 
-#: src/app.rs:5466
+#: src/app.rs:5473
 msgid "Sending the sticker pack…"
 msgstr "Invio del pacchetto di sticker…"
 
-#: src/app.rs:5754 src/ui/labels.rs:253
+#: src/app.rs:5761 src/ui/labels.rs:253
 #, rust-format
 msgid "You have {limit} labels, the most ZapFast keeps."
 msgstr "Hai {limit} etichette, il massimo che ZapFast conserva."
 
-#: src/app.rs:6476
+#: src/app.rs:6483
 msgid "App lock password saved"
 msgstr ""
 
-#: src/app.rs:6484
+#: src/app.rs:6491
 msgid "App lock turned off"
 msgstr ""
 
-#: src/app.rs:6598
+#: src/app.rs:6605
 msgid "This video opens in your system player"
 msgstr "Questo video si apre nel lettore di sistema"
 
-#: src/app.rs:7032
+#: src/app.rs:7039
 msgid "Copied image"
 msgstr "Immagine copiata"
 
-#: src/app.rs:7035 src/app.rs:7040
+#: src/app.rs:7042 src/app.rs:7047
 msgid "Failed to copy image"
 msgstr "Impossibile copiare l'immagine"
 

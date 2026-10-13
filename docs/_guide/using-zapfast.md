@@ -148,10 +148,16 @@ icon in the top-left corner of a picture's thumbnail (or right-click it and choo
   named `image.png`, preserving transparency/alpha when present, and sends it
   as a document. This does not recover the original file's bytes or metadata.
 
-Each picture has its own choice. Choose **Send as photo** in the context menu,
-or click the icon again, to return to the default mode.
-The toggle is available for pasted pictures and the supported photo formats
-listed above. Other image formats, including GIF, SVG, and HEIC, do not have it.
+Video files also offer this toggle and context menu. Choose **Send as document**
+to preserve the original video file, filename, and file type without extracting
+a preview or changing its contents. Choose **Send as video**, or click the icon
+again, to return to normal inline video delivery. This applies to video files
+attached from disk, dropped, or pasted as files.
+
+Each picture or video has its own choice. Choose **Send as photo** or
+**Send as video** in the context menu, or click the icon again, to return to
+the default mode. The toggle is available for video files, pasted pictures,
+and the supported photo formats listed above. Other image formats, including GIF, SVG, and HEIC, do not have it.
 
 If a send is refused because ZapFast is offline or the reply's original message
 is unavailable, the attachments keep their selected modes in the originating

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: ZapFast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/zapfast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-10 17:58-0300\n"
+"POT-Creation-Date: 2026-10-12 23:00-0300\n"
 "PO-Revision-Date: 2026-10-02 03:00+0300\n"
 "Last-Translator: Barış Berke Çetin <brsberkectn@gmail.com>\n"
 "Language-Team: Turkish\n"
@@ -178,7 +178,7 @@ msgstr "Kilitli"
 msgid "No favorites yet"
 msgstr "Henüz favori yok"
 
-#: src/ui/chats.rs:939 src/app.rs:2072
+#: src/ui/chats.rs:939 src/app.rs:2079
 msgid "Message yourself"
 msgstr "Kendinize mesaj gönderin"
 
@@ -292,7 +292,7 @@ msgid_plural "{} unread messages"
 msgstr[0] "{} okunmamış mesaj"
 msgstr[1] "{} okunmamış mesaj"
 
-#: src/ui/conversation.rs:2238 src/app.rs:2054 src/app.rs:2073
+#: src/ui/conversation.rs:2238 src/app.rs:2061 src/app.rs:2080
 msgid "You"
 msgstr "Siz"
 
@@ -429,27 +429,39 @@ msgstr "Sesi aç"
 msgid "Mute"
 msgstr "Sessize al"
 
-#: src/ui/conversation.rs:7902 src/ui/conversation.rs:8223
+#: src/ui/conversation.rs:7902 src/ui/conversation.rs:8300
 msgid "Send as photo · Click to send as document"
 msgstr ""
 
-#: src/ui/conversation.rs:8190
+#: src/ui/conversation.rs:7958 src/ui/conversation.rs:8295
+msgid "Send as video · Click to send as document"
+msgstr ""
+
+#: src/ui/conversation.rs:8261
 msgid "Document"
 msgstr ""
 
-#: src/ui/conversation.rs:8232
+#: src/ui/conversation.rs:8311
+msgid "Send as document · Click to send as video"
+msgstr ""
+
+#: src/ui/conversation.rs:8316
 msgid "Send as document · Click to send as photo"
 msgstr ""
 
-#: src/ui/conversation.rs:8271
+#: src/ui/conversation.rs:8357
+msgid "Send as video"
+msgstr ""
+
+#: src/ui/conversation.rs:8359
 msgid "Send as photo"
 msgstr ""
 
-#: src/ui/conversation.rs:8272
+#: src/ui/conversation.rs:8361
 msgid "Send as document"
 msgstr ""
 
-#: src/ui/conversation.rs:8273 src/ui/dialogs.rs:1193
+#: src/ui/conversation.rs:8362 src/ui/dialogs.rs:1193
 msgid "Remove"
 msgstr "Kaldır"
 
@@ -1158,29 +1170,29 @@ msgstr[1] "{} kaldı"
 msgid "No one yet"
 msgstr "Henüz kimse yok"
 
-#: src/app.rs:1483
+#: src/app.rs:1490
 msgid "Could not delete the removed account's files"
 msgstr ""
 
-#: src/app.rs:1977
+#: src/app.rs:1984
 #, rust-format
 msgid "A label named “{name}” already exists."
 msgstr "“{name}” adında bir etiket zaten var."
 
-#: src/app.rs:2053
+#: src/app.rs:2060
 #, rust-format
 msgid "{name} (You)"
 msgstr "{name} (Siz)"
 
-#: src/app.rs:2976
+#: src/app.rs:2983
 msgid "Could not use this image"
 msgstr "Bu görsel kullanılamadı"
 
-#: src/app.rs:3548
+#: src/app.rs:3555
 msgid "Not sent: ZapFast is not connected to WhatsApp."
 msgstr "Gönderilmedi: ZapFast WhatsApp'a bağlı değil."
 
-#: src/app.rs:3552
+#: src/app.rs:3559
 msgid ""
 "Not sent: the message you’re replying to isn’t available on this computer. "
 "Cancel the reply to send without a quote."
@@ -1188,36 +1200,36 @@ msgstr ""
 "Gönderilmedi: Yanıtladığınız mesaj bu bilgisayarda mevcut değil. Alıntısız "
 "göndermek için yanıtı iptal edin."
 
-#: src/app.rs:5391
+#: src/app.rs:5398
 msgid "Added to favorites"
 msgstr "Favorilere eklendi"
 
-#: src/app.rs:5466
+#: src/app.rs:5473
 msgid "Sending the sticker pack…"
 msgstr "Çıkartma paketi gönderiliyor…"
 
-#: src/app.rs:5754 src/ui/labels.rs:253
+#: src/app.rs:5761 src/ui/labels.rs:253
 #, rust-format
 msgid "You have {limit} labels, the most ZapFast keeps."
 msgstr "ZapFast'in tutabileceği maksimum sınır olan {limit} etikete ulaştınız."
 
-#: src/app.rs:6476
+#: src/app.rs:6483
 msgid "App lock password saved"
 msgstr "Uygulama kilidi parolası kaydedildi"
 
-#: src/app.rs:6484
+#: src/app.rs:6491
 msgid "App lock turned off"
 msgstr "Uygulama kilidi kapatıldı"
 
-#: src/app.rs:6598
+#: src/app.rs:6605
 msgid "This video opens in your system player"
 msgstr "Bu video sistem oynatıcınızda açılır"
 
-#: src/app.rs:7032
+#: src/app.rs:7039
 msgid "Copied image"
 msgstr "Görsel kopyalandı"
 
-#: src/app.rs:7035 src/app.rs:7040
+#: src/app.rs:7042 src/app.rs:7047
 msgid "Failed to copy image"
 msgstr "Görsel kopyalanamadı"
 
