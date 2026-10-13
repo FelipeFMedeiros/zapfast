@@ -2689,6 +2689,18 @@ pub fn apply_flags(app: &mut App, page: Option<&str>) {
                     .push(crate::app::Pending::file("/tmp/notes.pdf".into()));
                 app.composer = "Look at these".into();
             }
+            "staged-video" | "staged-video-doc" => {
+                let mode = if part == "staged-video-doc" {
+                    crate::model::SendMode::Document
+                } else {
+                    crate::model::SendMode::Auto
+                };
+                app.pending.push(crate::app::Pending::file_with_mode(
+                    "/fixture/client-final.mp4".into(),
+                    mode,
+                ));
+                app.composer = "Final video for the client".into();
+            }
             "staged-doc" => {
                 let (photo, _) = sample_files(app);
                 let side = 48usize;
@@ -4541,6 +4553,10 @@ mod tests {
             "staged",
             "staged-doc",
             "staged-doc,light",
+            "staged-video",
+            "staged-video,light",
+            "staged-video-doc",
+            "staged-video-doc,light",
             "compose-emoji",
             "voice",
             "voice,voice-menu",

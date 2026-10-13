@@ -10106,6 +10106,43 @@ mod tests {
     }
 
     #[test]
+    fn plan_media_keeps_inline_video_delivery_in_auto_mode() {
+        let bytes = include_bytes!("../../tests/fixtures/video/sample.mp4").to_vec();
+        let plan = plan_media(
+            bytes.clone(),
+            "video/mp4",
+            Some("clip.mp4"),
+            false,
+            SendMode::Auto,
+        )
+        .unwrap();
+        assert!(
+            matches!(plan, MediaPlan::Video { bytes: actual, mime, file_name: Some(name), gif: false, .. }
+            if actual == bytes && mime == "video/mp4" && name == "clip.mp4")
+        );
+    }
+
+    #[test]
+    fn plan_media_preserves_video_bytes_and_metadata_in_document_mode() {
+        // Invalid video bytes deliberately verify that document mode never decodes them.
+        let bytes = b"original video bytes and metadata".to_vec();
+        for (mime, name) in [
+            ("video/mp4", "edit.mp4"),
+            ("video/quicktime", "master.mov"),
+            ("video/webm", "preview.webm"),
+        ] {
+            assert_eq!(
+                plan_media(bytes.clone(), mime, Some(name), false, SendMode::Document).unwrap(),
+                MediaPlan::Document {
+                    bytes: bytes.clone(),
+                    mime: mime.into(),
+                    file_name: name.into()
+                }
+            );
+        }
+    }
+
+    #[test]
     fn plan_media_handles_non_images_consistently() {
         let text_bytes = b"Hello world document".to_vec();
         let plan_auto = plan_media(

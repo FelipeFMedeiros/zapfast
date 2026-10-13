@@ -754,6 +754,13 @@ impl Pending {
             .is_some_and(|mime| mime.type_() == "image")
     }
 
+    /// Whether automatic routing can send this file as a video.
+    pub fn is_video_file(path: &std::path::Path) -> bool {
+        mime_guess2::from_path(path)
+            .first()
+            .is_some_and(|mime| mime.type_() == "video")
+    }
+
     /// Whether automatic routing can send this file as a photo.
     pub fn can_send_as_photo(path: &std::path::Path) -> bool {
         mime_guess2::from_path(path)
@@ -11313,6 +11320,49 @@ mod tests {
         for name in ["animation.gif", "drawing.svg", "photo.heic", "notes.pdf"] {
             assert!(
                 !Pending::can_send_as_photo(std::path::Path::new(name)),
+                "{name}"
+            );
+        }
+    }
+
+    #[test]
+    fn videos_keep_individual_send_modes_and_first_file_caption() {
+        let root = tempfile::tempdir().unwrap();
+        let (mut app, _) = App::headless(AppDirs::under(root.path()), Settings::default());
+        let (backend, mut commands) = Backend::recording();
+        app.backend = backend;
+        let ctx = egui::Context::default();
+        let chat = "fixture@s.whatsapp.net";
+        app.open_chat = Some(chat.into());
+        app.reply_to = Some("original".into());
+        app.pending = vec![
+            Pending::file("master.mov".into()),
+            Pending::file("preview.mp4".into()),
+        ];
+        app.apply(Action::TogglePendingMode(0), &ctx);
+        app.apply(
+            Action::SendPending {
+                chat: chat.into(),
+                caption: "Client delivery".into(),
+            },
+            &ctx,
+        );
+        assert!(matches!(commands.try_recv().unwrap(), Command::SendFiles {
+            files, caption: Some(caption), quoting: Some(quote), ..
+        } if files == vec![OutboundFile { path: "master.mov".into(), mode: SendMode::Document }, OutboundFile::auto("preview.mp4".into())]
+            && caption == "Client delivery" && quote == "original"));
+        assert!(commands.try_recv().is_err());
+        assert!(app.pending.is_empty());
+    }
+
+    #[test]
+    fn video_mode_is_available_for_video_files() {
+        for name in ["clip.mp4", "clip.MOV", "clip.webm", "clip.mkv", "clip.avi"] {
+            assert!(Pending::is_video_file(std::path::Path::new(name)), "{name}");
+        }
+        for name in ["photo.jpg", "notes.pdf", "audio.mp3", "animation.gif"] {
+            assert!(
+                !Pending::is_video_file(std::path::Path::new(name)),
                 "{name}"
             );
         }

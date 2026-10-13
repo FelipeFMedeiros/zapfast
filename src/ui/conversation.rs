@@ -7927,6 +7927,62 @@ mod tests {
     }
 
     #[test]
+    fn pending_video_mode_can_be_toggled_with_the_keyboard() {
+        let root = tempfile::tempdir().unwrap();
+        let (mut app, _) = crate::app::App::headless(
+            crate::paths::AppDirs::under(root.path()),
+            crate::settings::Settings::default(),
+        );
+        app.pending
+            .push(crate::app::Pending::file("/fixture/clip.mp4".into()));
+        let ctx = egui::Context::default();
+        let mut output = ctx.run_ui(egui::RawInput::default(), |ui| {
+            pending_strip(&mut app, ui);
+        });
+        output.textures_delta.clear();
+        // Tab reaches the mode button, with a label for assistive technology.
+        let mut output = ctx.run_ui(
+            egui::RawInput {
+                events: vec![egui::Event::Key {
+                    key: egui::Key::Tab,
+                    physical_key: None,
+                    pressed: true,
+                    repeat: false,
+                    modifiers: egui::Modifiers::NONE,
+                }],
+                ..Default::default()
+            },
+            |ui| pending_strip(&mut app, ui),
+        );
+        output.textures_delta.clear();
+        let label = crate::i18n::gettext(app.locale, "Send as video · Click to send as document");
+        assert!(
+            output
+                .platform_output
+                .events
+                .iter()
+                .any(|event| matches!(event,
+            egui::output::OutputEvent::FocusGained(info) if info.label.as_deref() == Some(label.as_ref()))),
+            "{:?}", output.platform_output.events
+        );
+        let mut output = ctx.run_ui(
+            egui::RawInput {
+                events: vec![egui::Event::Key {
+                    key: egui::Key::Enter,
+                    physical_key: None,
+                    pressed: true,
+                    repeat: false,
+                    modifiers: egui::Modifiers::NONE,
+                }],
+                ..Default::default()
+            },
+            |ui| pending_strip(&mut app, ui),
+        );
+        output.textures_delta.clear();
+        assert!(app.actions.contains(&Action::TogglePendingMode(0)));
+    }
+
+    #[test]
     fn composer_triggers_only_start_at_word_boundaries() {
         assert_eq!(standalone_trigger(":", 1, ':'), Some(0));
         assert_eq!(standalone_trigger("hello :", 7, ':'), Some(6));
@@ -8085,7 +8141,9 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                     palette.raised_edge(palette.surface),
                 );
                 ui.painter().rect_filled(rect, radius, palette.surface);
-                let mut picture_mode = None;
+                let mut media_mode = None;
+                let is_video = matches!(item, crate::app::Pending::File { path, .. }
+                    if crate::app::Pending::is_video_file(path));
                 match item {
                     crate::app::Pending::Picture {
                         width,
@@ -8094,7 +8152,7 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                         texture,
                         mode,
                     } => {
-                        picture_mode = Some(*mode);
+                        media_mode = Some(*mode);
                         let handle = texture.get_or_insert_with(|| {
                             // Limit thumbnails to the GPU's maximum texture size.
                             let image = if *width > 1024 || *height > 1024 {
@@ -8144,18 +8202,31 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                     crate::app::Pending::File { path, mode } => {
                         if crate::app::Pending::is_picture_file(path) {
                             if crate::app::Pending::can_send_as_photo(path) {
-                                picture_mode = Some(*mode);
+                                media_mode = Some(*mode);
                             }
                             widgets::file_image(ui, path)
                                 .fit_to_exact_size(Vec2::splat(tile - 8.0))
                                 .corner_radius(6.0)
                                 .paint_at(ui, rect.shrink(4.0));
                         } else {
+                            if is_video {
+                                media_mode = Some(*mode);
+                            }
                             let icon = Rect::from_center_size(
                                 rect.center() - vec2(0.0, 10.0),
                                 Vec2::splat(24.0),
                             );
-                            theme::paint_icon(ui, Icon::FileText, icon, 22.0, palette.secondary);
+                            theme::paint_icon(
+                                ui,
+                                if is_video && *mode == SendMode::Auto {
+                                    Icon::Video
+                                } else {
+                                    Icon::FileText
+                                },
+                                icon,
+                                22.0,
+                                palette.secondary,
+                            );
                             let name = path
                                 .file_name()
                                 .map(|name| name.to_string_lossy().into_owned())
@@ -8179,7 +8250,7 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                         }
                     }
                 }
-                if picture_mode == Some(SendMode::Document) {
+                if media_mode == Some(SendMode::Document) {
                     let badge_h = 16.0;
                     let badge_rect = Rect::from_min_max(
                         pos2(rect.left() + 6.0, rect.bottom() - 6.0 - badge_h),
@@ -8205,8 +8276,8 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                         palette.on_accent,
                     );
                 }
-                // Mode toggle button in the top-left corner for pictures.
-                if let Some(mode) = picture_mode {
+                // Mode toggle button for photos and videos.
+                if let Some(mode) = media_mode {
                     let mode_rect = Rect::from_center_size(
                         rect.left_top() + vec2(10.0, 10.0),
                         Vec2::splat(18.0),
@@ -8217,20 +8288,34 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                         SendMode::Auto => (
                             palette.overlay,
                             palette.text,
-                            Icon::Image,
-                            crate::i18n::gettext(
-                                app.locale,
-                                "Send as photo · Click to send as document",
-                            ),
+                            if is_video { Icon::Video } else { Icon::Image },
+                            if is_video {
+                                crate::i18n::gettext(
+                                    app.locale,
+                                    "Send as video · Click to send as document",
+                                )
+                            } else {
+                                crate::i18n::gettext(
+                                    app.locale,
+                                    "Send as photo · Click to send as document",
+                                )
+                            },
                         ),
                         SendMode::Document => (
                             palette.accent,
                             palette.on_accent,
                             Icon::FileText,
-                            crate::i18n::gettext(
-                                app.locale,
-                                "Send as document · Click to send as photo",
-                            ),
+                            if is_video {
+                                crate::i18n::gettext(
+                                    app.locale,
+                                    "Send as document · Click to send as video",
+                                )
+                            } else {
+                                crate::i18n::gettext(
+                                    app.locale,
+                                    "Send as document · Click to send as photo",
+                                )
+                            },
                         ),
                     };
                     mode_response.widget_info(|| {
@@ -8266,13 +8351,21 @@ fn pending_strip(app: &mut App, ui: &mut egui::Ui) {
                 {
                     remove = Some(index);
                 }
-                if let Some(mode) = picture_mode {
+                if let Some(mode) = media_mode {
                     response.context_menu(|ui| {
-                        let as_photo = crate::i18n::gettext(app.locale, "Send as photo");
+                        let as_media = if is_video {
+                            crate::i18n::gettext(app.locale, "Send as video")
+                        } else {
+                            crate::i18n::gettext(app.locale, "Send as photo")
+                        };
                         let as_doc = crate::i18n::gettext(app.locale, "Send as document");
                         let remove_text = crate::i18n::gettext(app.locale, "Remove");
-                        if widgets::menu_item(ui, &palette, Some(Icon::Image), &as_photo)
-                            && mode != SendMode::Auto
+                        if widgets::menu_item(
+                            ui,
+                            &palette,
+                            Some(if is_video { Icon::Video } else { Icon::Image }),
+                            &as_media,
+                        ) && mode != SendMode::Auto
                         {
                             set_mode = Some((index, SendMode::Auto));
                         }
